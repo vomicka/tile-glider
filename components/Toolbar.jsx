@@ -2,15 +2,16 @@
 import React, {useEffect, useRef, useState} from 'react';
 import '../styles/toolbar.css'
 
-function Toolbar({counter, length, animate, setAnimate, consumeMove, medicineName, ganttData}) {
+function Toolbar({counter, length, animate, setAnimate, consumeMove, medicineName, ganttData, simulationId}) {
     const [selectedGantt, setSelectedGantt] = useState(0)
     const [btnStates, setStates] = useState(["", "", "", "", ""])
     const [barMode, setBarMode] = useState('barAttached')
     const gridIframe = useRef(null);
     const [contentWindow, setContentWindow] = useState(null)
     const contentWindowRef = useRef();
-
-    const ganttNamesArray = ganttData['names'].map(x => '/gantts/' + x)
+    const ganttNamesArray = ganttData.names;
+    const currentPlotFilename = ganttNamesArray[selectedGantt];
+    const plotUrl = `${process.env.NEXT_PUBLIC_API_URL}/${simulationId}/plots/${currentPlotFilename}`;
 
     useEffect(() => {
         // noinspection JSValidateTypes
@@ -93,7 +94,7 @@ function Toolbar({counter, length, animate, setAnimate, consumeMove, medicineNam
             </div>
         </div>
         <iframe ref={gridIframe} onLoad={handleGrid}
-                src={"../simulations/" + ganttData['folder'] + ganttNamesArray[selectedGantt]} title="Gantt"/>
+                src={plotUrl} title="Gantt"/>
     </div>);
 }
 

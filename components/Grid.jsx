@@ -10,7 +10,7 @@ import {useMemo} from 'react';
 const CELL_SIZE = 240;
 const MOVER_SIZE = 112;
 // m x n
-export default function Grid({m, n, simulationData, fill}) {
+export default function Grid({m, n, simulationData, fill, simulationId}) {
   const medicineInfo = simulationData['medicine'];
   const dispenserInfo = simulationData['dispensers'];
   const patientColors = simulationData['patient_color_dict'];
@@ -217,10 +217,16 @@ export default function Grid({m, n, simulationData, fill}) {
             }} rx="15">{id}</animated.rect>);
       })}
     </svg>
-    <Toolbar counter={counter} length={positions[0].length} animate={speed}
-             medicineName={medicineName}
-             consumeMove={consumeMove} setAnimate={setSpeed}
-             setMedicine={setMedicine} ganttData={ganttData}/>
+    <Toolbar
+        counter={counter}
+        length={positions[0].length}
+        animate={speed}
+        medicineName={medicineName}
+        consumeMove={consumeMove}
+        setAnimate={setSpeed}
+        setMedicine={setMedicine}
+        ganttData={ganttData}
+        simulationId={simulationId}/>
   </>);
 
 }

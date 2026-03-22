@@ -13,7 +13,7 @@ const SimulationCard = ({simulationDetail}) => {
     n_tiles,
     n_interfaces,
     n_dispensers,
-  } = simulationDetail.topologyInfo;
+  } = simulationDetail.topology_info;
 
   const metrics = [
     {icon: <HiBeaker/>, label: 'Dose', value: simulationDetail.dose},
@@ -43,7 +43,7 @@ const SimulationCard = ({simulationDetail}) => {
         <div className="card-content p-4 flex flex-col justify-between h-[90%]">
           <Image
               fill={true}
-              src={`layouts/${topology}.svg`}
+              src={`/layouts/${topology}.svg`}
               alt="Simulation Image"
           />
           <div className="space-y-4">
