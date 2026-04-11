@@ -80,7 +80,7 @@ function Toolbar({counter, length, animate, setAnimate, consumeMove, medicineNam
                     </>
                 ) : (
                     <span className="text-gray-500 italic mr-4">
-                        Animation unavailable for this solver.
+                        Animation unavailable for this experiment.
                     </span>
                 )}
 

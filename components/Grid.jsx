@@ -12,7 +12,7 @@ const MOVER_SIZE = 112;
 // m x n
 export default function Grid({m, n, simulationData, fill, simulationId}) {
   const tileTypeInfo = simulationData['tile_type_dict'];
-  const dispenserInfo = simulationData['dispensers'];
+  const dispenserInfo = simulationData['dispenser_dict'];
   const orderColors = simulationData['order_color_dict'];
   const ganttData = simulationData['gantts'];
 

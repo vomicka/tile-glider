@@ -16,9 +16,9 @@ const SimulationCard = ({simulationDetail}) => {
   } = simulationDetail.topology_info;
 
   const metrics = [
-    {icon: <HiBeaker/>, label: 'Dose', value: simulationDetail.dose},
-    {icon: <TbTruck/>, label: 'Movers', value: simulationDetail.movers},
-    {icon: <TbUsers/>, label: 'Patients', value: simulationDetail.patients},
+    {icon: <HiBeaker/>, label: 'Dose', value: simulationDetail.dispensing_time},
+    {icon: <TbTruck/>, label: 'Movers', value: simulationDetail.mover_amount},
+    {icon: <TbUsers/>, label: 'Patients', value: simulationDetail.order_amount},
     {icon: <TbGrid3X3/>, label: 'Tiles', value: n_tiles + n_interfaces},
     {
       icon: <MdOutlinePrecisionManufacturing/>,
