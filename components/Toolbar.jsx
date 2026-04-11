@@ -2,7 +2,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import '../styles/toolbar.css'
 
-function Toolbar({counter, length, animate, setAnimate, consumeMove, medicineName, ganttData, simulationId}) {
+function Toolbar({counter, length, animate, setAnimate, consumeMove, medicineName, ganttData, simulationId, hasSimulation}) {
     const [selectedGantt, setSelectedGantt] = useState(0)
     const [btnStates, setStates] = useState(["", "", "", "", ""])
     const [barMode, setBarMode] = useState('barAttached')
@@ -11,7 +11,7 @@ function Toolbar({counter, length, animate, setAnimate, consumeMove, medicineNam
     const contentWindowRef = useRef();
     const ganttNamesArray = ganttData.names;
     const currentPlotFilename = ganttNamesArray[selectedGantt];
-    const plotUrl = `${process.env.NEXT_PUBLIC_API_URL}/${simulationId}/plots/${currentPlotFilename}`;
+    const plotUrl = `${process.env.NEXT_PUBLIC_API_URL}/simulations/${simulationId}/plots/${currentPlotFilename}`;
 
     useEffect(() => {
         // noinspection JSValidateTypes
@@ -63,34 +63,41 @@ function Toolbar({counter, length, animate, setAnimate, consumeMove, medicineNam
         <div className="toolbarWrapper">
             {showMedicine()}
             <div className="toolbar">
-                <span>Frame: {counter}/{length - 1} </span>
-                {counter !== length ? <>
-                    <div className='flex gap-1'>
-                    <button className={btnStates[0]} onClick={() => select(0, -2)}>Next Frame</button>
-                    <button className={btnStates[1] + " separate"} onClick={() => select(1, 250)}>
-                        <span>Play </span>
-                    </button>
-                    <button className={btnStates[2]} onClick={() => select(2, 50)}><span>Fast </span>
-                    </button>
-                    <button className={btnStates[3]} onClick={() => select(3, 8)}><span>Fastest </span>
-                    </button>
-                    <button onClick={() => select(0, -1)}><span>Pause</span></button>
-                    </div>
-                    <button
-                        className="separate"
-                        onClick={() => setBarMode(state => state === 'barAttached' ? 'barDetached' : 'barAttached')}>
-                        <span>{barMode === 'barAttached' ? 'Detach' : 'Attach'}</span>
-                    </button>
+                {hasSimulation ? (
+                    <>
+                        <span>Frame: {counter}/{length - 1} </span>
+                        {counter !== length ? (
+                            <div className='flex gap-1'>
+                                <button className={btnStates[0]} onClick={() => select(0, -2)}>Next Frame</button>
+                                <button className={btnStates[1] + " separate"} onClick={() => select(1, 250)}>
+                                    <span>Play </span>
+                                </button>
+                                <button className={btnStates[2]} onClick={() => select(2, 50)}><span>Fast </span></button>
+                                <button className={btnStates[3]} onClick={() => select(3, 8)}><span>Fastest </span></button>
+                                <button onClick={() => select(0, -1)}><span>Pause</span></button>
+                            </div>
+                        ) : ""}
+                    </>
+                ) : (
+                    <span className="text-gray-500 italic mr-4">
+                        Animation unavailable for this solver.
+                    </span>
+                )}
 
-                    <div className="chartButtons">
-                        <button
-                            onClick={() => setSelectedGantt(idx => ((idx > 0 ? idx - 1 : ganttNamesArray.length - 1)))}>
-                            <span>Prev</span></button>
-                        <button
-                            onClick={() => setSelectedGantt(idx => ((idx + 1) % ganttNamesArray.length))}>
-                            <span>Next</span></button>
-                    </div>
-                </> : ""}
+                <button
+                    className={hasSimulation ? "separate" : ""}
+                    onClick={() => setBarMode(state => state === 'barAttached' ? 'barDetached' : 'barAttached')}>
+                    <span>{barMode === 'barAttached' ? 'Detach' : 'Attach'}</span>
+                </button>
+
+                <div className="chartButtons">
+                    <button onClick={() => setSelectedGantt(idx => ((idx > 0 ? idx - 1 : ganttNamesArray.length - 1)))}>
+                        <span>Prev</span>
+                    </button>
+                    <button onClick={() => setSelectedGantt(idx => ((idx + 1) % ganttNamesArray.length))}>
+                        <span>Next</span>
+                    </button>
+                </div>
             </div>
         </div>
         <iframe ref={gridIframe} onLoad={handleGrid}

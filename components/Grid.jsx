@@ -11,9 +11,9 @@ const CELL_SIZE = 240;
 const MOVER_SIZE = 112;
 // m x n
 export default function Grid({m, n, simulationData, fill, simulationId}) {
-  const medicineInfo = simulationData['medicine'];
+  const tileTypeInfo = simulationData['tile_type_dict'];
   const dispenserInfo = simulationData['dispensers'];
-  const patientColors = simulationData['patient_color_dict'];
+  const orderColors = simulationData['order_color_dict'];
   const ganttData = simulationData['gantts'];
 
   let simulationDatumElement = simulationData['mover_paths']['paths'];
@@ -74,7 +74,7 @@ export default function Grid({m, n, simulationData, fill, simulationId}) {
     if (medicineName.length > 0) {
       for (const singleMedicineName of medicineName.split(',')) {
         if (singleMedicineName === 'unavailable') continue;
-        for (let coordinate of medicineInfo[singleMedicineName]) {
+        for (let coordinate of tileTypeInfo[singleMedicineName]) {
           const x = coordinate[0];
           const y = coordinate[1];
           updatedSelected[x][y] = 1;
@@ -85,7 +85,7 @@ export default function Grid({m, n, simulationData, fill, simulationId}) {
       medicineRef.current = '';
     }
     setSelected(updatedSelected);
-  }, [medicineInfo, matrix, m, medicineName, n, selected]);
+  }, [tileTypeInfo, matrix, m, medicineName, n, selected]);
 
   const consumeMove = useCallback(() => {
     if (positions && positions.length > 0 && progressRef.current !==
@@ -133,6 +133,10 @@ export default function Grid({m, n, simulationData, fill, simulationId}) {
   }, [api, matrix, n, positions]);
 
   const animateV = useCallback(time => {
+    if (!positions || positions.length === 0) {
+      return;
+    }
+
     if (previousTimeRef.current !== undefined) {
       const deltaTime = time - previousTimeRef.current;
       if (animateRef.current > 0 && deltaTime > animateRef.current) {
@@ -150,7 +154,7 @@ export default function Grid({m, n, simulationData, fill, simulationId}) {
   useEffect(() => {
     window.abc = (val) => {
       const name = val['points'][0]['data']['offsetgroup'];
-      if (name in medicineInfo) {
+      if (name in tileTypeInfo) {
         setMedicine(name);
       }
     };
@@ -169,7 +173,7 @@ export default function Grid({m, n, simulationData, fill, simulationId}) {
     };
     requestRef.current = requestAnimationFrame(animateV);
     return () => cancelAnimationFrame(requestRef.current);
-  }, [animateV, medicineInfo]);
+  }, [animateV, tileTypeInfo]);
 
   const placeTiles = () => {
     let res = [];
@@ -198,7 +202,7 @@ export default function Grid({m, n, simulationData, fill, simulationId}) {
                      height="20">
 
               <rect width="20" height="20"
-                    fill={patientColors[positions[id][progressRef.current]['patient']]}/>
+                    fill={orderColors[positions[id][progressRef.current]['order']]}/>
               <path d="M-1,1 l2,-2
                         M0,20 l20,-20
                         M19,21 l2,-2"
@@ -219,7 +223,8 @@ export default function Grid({m, n, simulationData, fill, simulationId}) {
     </svg>
     <Toolbar
         counter={counter}
-        length={positions[0].length}
+        length={positions.length > 0 ? positions[0].length : 0}
+        hasSimulation={positions.length > 0}
         animate={speed}
         medicineName={medicineName}
         consumeMove={consumeMove}

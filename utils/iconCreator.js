@@ -38,7 +38,7 @@ export function createIcons() {
 
     // Generate SVGs with gaps
     fs.writeFileSync('public/layouts/square.svg', createGrid(4, 4,true,100,10));
-    fs.writeFileSync('public/layouts/doubleline.svg', createGrid(6, 2, true, 100,10));
+    fs.writeFileSync('public/layouts/double_line.svg', createGrid(6, 2, true, 100,10));
     fs.writeFileSync('public/layouts/line.svg', createGrid(8, 1, true, 100,10));
     fs.writeFileSync('public/layouts/ring.svg', createGrid(4, 4, false, 100,10));
 }

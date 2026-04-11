@@ -38,7 +38,7 @@ const SimulationCard = ({simulationDetail}) => {
           className="w-[300px] min-h-[350px] rounded-lg overflow-hidden shadow-md transition-shadow duration-200 bg-white hover:shadow-lg cursor-pointer"
       >
         <div className="relative bg-blue-200 p-2 text-gray-800">
-          <h2 className="m-0 text-xl font-medium capitalize">{topology} simulation</h2>
+          <h2 className="m-0 text-xl font-medium capitalize">{simulationDetail.name || `${topology} Simulation`}</h2>
         </div>
         <div className="card-content p-4 flex flex-col justify-between h-[90%]">
           <Image
