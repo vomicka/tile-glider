@@ -73,7 +73,11 @@ export default function Grid({m, n, simulationData, fill, simulationId}) {
     let updatedSelected = Array.from({length: m}, () => Array(n).fill(0));
     if (medicineName.length > 0) {
       for (const singleMedicineName of medicineName.split(',')) {
-        if (singleMedicineName === 'unavailable') continue;
+
+        if (singleMedicineName === 'unavailable' || singleMedicineName === 'blocked' || singleMedicineName === 'empty') continue;
+
+        if (!tileTypeInfo[singleMedicineName]) continue;
+
         for (let coordinate of tileTypeInfo[singleMedicineName]) {
           const x = coordinate[0];
           const y = coordinate[1];
