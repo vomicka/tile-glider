@@ -178,12 +178,29 @@ export default function Grid({m, n, simulationData, fill, simulationId}) {
     return () => cancelAnimationFrame(requestRef.current);
   }, [animateV, tileTypeInfo]);
 
+  // Calculate the absolute maximum visits any tile will receive during the entire simulation
+  const maxTileVisits = useMemo(() => {
+    if (!positions || positions.length === 0) return 1;
+
+    const futureMatrix = Array.from({length: m}, () => Array(n).fill(0));
+
+    for (const path of positions) {
+      for (const pos of path) {
+        if (pos.mode === 'transit') {
+          futureMatrix[pos.logicalX][pos.logicalY] += 1;
+        }
+      }
+    }
+
+    return Math.max(1, ...futureMatrix.flat());
+  }, [positions, m, n]);
+
   const placeTiles = () => {
     let res = [];
     for (let i = 0; i < m; i++) {
       for (let j = 0; j < n; j++) {
         if (fill || i === 0 || j === 0 || i === m - 1 || j === n - 1) {
-          res.push(<Tile maxPath={ganttData['max_path']}
+          res.push(<Tile maxPath={maxTileVisits}
                          setMedicine={setMedicine} selected={selected[i][j]}
                          speed={speed} key={`${i}x${j}`}
                          name={dispenserInfo[`${i}x${j}`]}

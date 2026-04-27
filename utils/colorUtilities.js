@@ -8,7 +8,14 @@ export function getColorFromGradientRGB(index, length) {
     return `rgba(${red}, ${green}, ${blue}, ${opacity})`;
 }
 
-export function getColorFromGradient(index, maxPath) {
-    const normalizedIndex = 1 - index / (maxPath - 1) * 0.5;
-    return `hsl(${normalizedIndex * 20}, 100%, ${normalizedIndex * 100}%)`;
-}
+export const getColorFromGradient = (value, max) => {
+    if (max === 0 || value === 0) return '#ffffff';
+
+    const ratio = Math.min(value / max, 1);
+
+    const r = 255;
+    const g = Math.round(255 - (105 * ratio));
+    const b = Math.round(255 - (105 * ratio));
+
+    return `rgb(${r}, ${g}, ${b})`;
+};
