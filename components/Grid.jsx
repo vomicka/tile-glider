@@ -88,13 +88,13 @@ export default function Grid({m, n, simulationData, fill, simulationId}) {
   }, [tileTypeInfo, matrix, m, medicineName, n, selected]);
 
   const consumeMove = useCallback(() => {
-    if (positions && positions.length > 0 && progressRef.current !==
-        positions[0].length - 1) {
+    if (positions && positions.length > 0 && progressRef.current !== positions[0].length - 1) {
       let newCoords = [];
       for (const path of positions) {
         const nextStep = path[progressRef.current + 1];
         newCoords.push(nextStep);
       }
+
       api.start(index => {
         const position = newCoords[index];
         let res;
@@ -102,9 +102,7 @@ export default function Grid({m, n, simulationData, fill, simulationId}) {
         if (pos.y !== (n - 1) * CELL_SIZE && pos.y !== 0) {
           res = {
             from: {x: pos.x, y: pos.y},
-            to: [
-              {x: (position.x)},
-              {y: (position.y)}].reverse(),
+            to: [{x: (position.x)}, {y: (position.y)}].reverse(),
           };
         } else {
           res = {
@@ -118,17 +116,22 @@ export default function Grid({m, n, simulationData, fill, simulationId}) {
         };
         return {...res, config: {duration: animateRef.current}};
       });
+
       progressRef.current += 1;
       setCounter(ct => ct + 1);
-      const updatedMatrix = [...matrix]; // Update heatmap
-      for (const pos of newCoords) {
-        const {logicalX, logicalY, mode} = pos;
-        if (mode !== 'transit') {
-          continue;
+
+      // The single, correct state update
+      setMatrix(prevMatrix => {
+        const newMatrix = prevMatrix.map(row => [...row]);
+
+        for (const pos of newCoords) {
+          const {logicalX, logicalY, mode} = pos;
+          if (mode === 'transit') {
+            newMatrix[logicalX][logicalY] += 1;
+          }
         }
-        updatedMatrix[logicalX][logicalY] += 1;
-      }
-      setMatrix(updatedMatrix);
+        return newMatrix;
+      });
     }
   }, [api, matrix, n, positions]);
 
