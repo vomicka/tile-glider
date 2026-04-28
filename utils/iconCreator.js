@@ -12,7 +12,7 @@ export function createIcons() {
         }
     };
 
-    const createGrid = (x, y = x, filled = true, cellSize = 100, gap = 4) => {
+    const createGrid = (x, y = x, condition = true, cellSize = 100, gap = 4) => {
         // Add extra space to viewBox to accommodate gaps
         const gridSizeX = (cellSize * x) + gap;
         const gridSizeY = (cellSize * y) + gap;
@@ -20,7 +20,11 @@ export function createIcons() {
 
         for (let i = 0; i < x; i++) {
             for (let j = 0; j < y; j++) {
-                if (filled || i === 0 || i === x - 1 || j === 0 || j === y - 1) {
+                const shouldDraw = typeof condition === 'function'
+                    ? condition(i, j, x, y)
+                    : (condition || i === 0 || i === x - 1 || j === 0 || j === y - 1);
+
+                if (shouldDraw) {
                     grid += shapes.square(i * cellSize, j * cellSize, cellSize, gap);
                 }
             }
@@ -37,8 +41,11 @@ export function createIcons() {
     }
 
     // Generate SVGs with gaps
-    fs.writeFileSync('public/layouts/square.svg', createGrid(4, 4,true,100,10));
-    fs.writeFileSync('public/layouts/double_line.svg', createGrid(6, 2, true, 100,10));
-    fs.writeFileSync('public/layouts/line.svg', createGrid(8, 1, true, 100,10));
-    fs.writeFileSync('public/layouts/ring.svg', createGrid(4, 4, false, 100,10));
+    fs.writeFileSync('public/layouts/square.svg', createGrid(4, 4, true, 100, 10));
+    fs.writeFileSync('public/layouts/double_line.svg', createGrid(6, 2, true, 100, 10));
+    fs.writeFileSync('public/layouts/line.svg', createGrid(8, 1, true, 100, 10));
+    fs.writeFileSync('public/layouts/ring.svg', createGrid(4, 4, false, 100, 10));
+    fs.writeFileSync('public/layouts/custom.svg', createGrid(4, 4, (i, j, w, h) => j === 0 || j === h - 1 || i === 0, 100, 10));
 }
+
+createIcons();
