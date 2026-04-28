@@ -102,7 +102,7 @@ export default function Grid({m, n, simulationData, fill, simulationId}) {
       api.start(index => {
         const position = newCoords[index];
         let res;
-        const pos = moversRefs.current;
+        const pos = moversRefs.current[index];
         if (pos.y !== (n - 1) * CELL_SIZE && pos.y !== 0) {
           res = {
             from: {x: pos.x, y: pos.y},
