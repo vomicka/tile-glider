@@ -34,7 +34,7 @@ export default function Home() {
     const eventSource = new EventSource(`${process.env.NEXT_PUBLIC_API_URL}/notifications/stream`);
 
     eventSource.onmessage = (event) => {
-      if (event.data === "new_simulation") {
+      if (event.data === "experiment_finished") {
         setHasNewSimulation(true);
       }
     };
