@@ -27,17 +27,26 @@ const Tile = memo(function NonMemoTile({
     } else if (name === 'empty' || name === 'unavailable') {
         tileType += ' empty';
         if (idx === 0) color = 'lightgrey';
+    } else if (name === 'capper') {
+        tileType += ' capper';
+        innerStrokeColor = 'violet';
+        if (idx === 0) color = '#f3e8ff';
+    } else if (name === 'mixer') {
+        tileType += ' mixer';
+        innerStrokeColor = 'green';
+        if (idx === 0) color = '#dcfce7';
     } else {
-        innerStrokeColor = 'lightgreen';
+        tileType += ' dispenser';
+        innerStrokeColor = 'orange';
+        if (idx === 0) color = '#ffedd5';
     }
 
     if (selected === 1) {
-        tileType += 'selected';
-        if (name === 'interface') {
-            color = 'lightblue';
-        } else {
-            color = 'lightgreen';
-        }
+        tileType += ' selected';
+        if (name === 'interface') color = 'lightblue';
+        else if (name === 'capper') color = 'violet';
+        else if (name === 'mixer') color = 'green';
+        else color = 'orange';
     }
 
     const [stateY, setStateY] = useState(y);
